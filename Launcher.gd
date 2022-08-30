@@ -39,5 +39,7 @@ func throw_projectile():
 	new_ball.linear_velocity = transform.basis.xform(Vector3.FORWARD) * (20)
 
 func ball_collision(body):
+	print("collision")
 	if(body.name == "Player"):
 		print("hit player")
+		get_node("../Player").transform.origin = get_node("../Start").transform.origin + Vector3.UP

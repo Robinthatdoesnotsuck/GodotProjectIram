@@ -13,7 +13,7 @@ var sensitivity:float = 10
 var velocity:Vector3 = Vector3()
 var mouseDelta: Vector2 = Vector2()
 #var scoreUI:RichTextLabel
-
+var score = 0
 
 onready var camera :Camera = get_node("Camera")#only when node is initialized
 
@@ -52,7 +52,14 @@ func _physics_process(delta):#called 60 times per sec
 	pass
 	if (Input.is_action_pressed("jump")) and is_on_floor():
 		velocity.y = jumpForce
-		
+	
+	for index in get_slide_count():
+		var collision = get_slide_collision(index)
+		if(collision.collider.is_in_group("collect")):
+			print("Collision with: " + collision.collider.name)
+			score += 1
+			print("score " + str(score))
+			collision.collider.queue_free()	
 		
 
 	
