@@ -14,11 +14,18 @@ var velocity:Vector3 = Vector3()
 var mouseDelta: Vector2 = Vector2()
 #var scoreUI:RichTextLabel
 var score = 0
+var message_timer:Timer
 
-onready var camera :Camera = get_node("Camera")#only when node is initialized
+onready var camera :Camera = get_node("Camera") #only when node is initialized
+onready var user_message:Label = get_node("./Message")
+onready var score_message:Label = get_node("./Score")
 
 func _ready():
+	message_timer = Timer.new()
+	add_child(message_timer)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	user_message.set_text("")
+	score_message.set_text("Score :" + str(score))
 	
 	
 
@@ -59,7 +66,15 @@ func _physics_process(delta):#called 60 times per sec
 			print("Collision with: " + collision.collider.name)
 			score += 1
 			print("score " + str(score))
+			score_message.set_text("Score :" + str(score))
+			user_message.set_text("You have collected an object")
+			message_timer.connect("timeout", self, "clear_text")
+			message_timer.set_wait_time(5)
+			message_timer.start()
 			collision.collider.queue_free()	
+		elif(collision.collider.name == "End" && score == 4):
+			print("Congratulations!!")
+			user_message.set_text("CONGRATULATIONS")
 		
 
 	
@@ -76,3 +91,5 @@ func _input(event):
 	#print("Test")
 	if event is InputEventMouseMotion	:
 		mouseDelta = event.relative
+func clear_text():
+	user_message.set_text("")
