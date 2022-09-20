@@ -18,14 +18,21 @@ var message_timer:Timer
 
 onready var camera :Camera = get_node("Camera") #only when node is initialized
 onready var user_message:Label = get_node("./Message")
-onready var score_message:Label = get_node("./Score")
+#onready var score_message:Label = get_node("./Score")
+
+var ray:RayCast
+var gun_ammo = 3
 
 func _ready():
+	ray = RayCast.new()
+	ray.enabled = true
+	camera.add_child(ray)
+	ray.cast_to = Vector3(0, 0, -100)
 	message_timer = Timer.new()
 	add_child(message_timer)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	user_message.set_text("")
-	score_message.set_text("Score :" + str(score))
+	#score_message.set_text("Score :" + str(score))
 	
 	
 
@@ -42,7 +49,13 @@ func _physics_process(delta):#called 60 times per sec
 	if Input.is_action_pressed("move_left"):
 		input.x+=1		
 	if Input.is_action_pressed("move_right"):
-		input.x-=1		
+		input.x-=1
+	if (Input.is_action_just_pressed("fire") && gun_ammo > 0):
+		if ray.is_colliding():
+			gun_ammo -= 1
+			var obj = ray.get_collider()
+			print("the object " + obj.get_name() + " is in front of the player00")
+			print("you have " + str(gun_ammo) + " ammo left")		
 	input.normalized();
 	
 	var forward = global_transform.basis.z;
@@ -66,7 +79,7 @@ func _physics_process(delta):#called 60 times per sec
 			print("Collision with: " + collision.collider.name)
 			score += 1
 			print("score " + str(score))
-			score_message.set_text("Score :" + str(score))
+			#score_message.set_text("Score :" + str(score))
 			user_message.set_text("You have collected an object")
 			message_timer.connect("timeout", self, "clear_text")
 			message_timer.set_wait_time(5)
