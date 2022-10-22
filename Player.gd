@@ -21,7 +21,7 @@ onready var user_message:Label = get_node("./Message")
 #onready var score_message:Label = get_node("./Score")
 
 var ray:RayCast
-var gun_ammo = 3
+var gun_ammo = 10
 
 func _ready():
 	ray = RayCast.new()
@@ -55,7 +55,9 @@ func _physics_process(delta):#called 60 times per sec
 			gun_ammo -= 1
 			var obj = ray.get_collider()
 			print("the object " + obj.get_name() + " is in front of the player00")
-			print("you have " + str(gun_ammo) + " ammo left")		
+			print("you have " + str(gun_ammo) + " ammo left")	
+			if (obj.is_in_group("target")):
+				obj.got_hit()	
 	input.normalized();
 	
 	var forward = global_transform.basis.z;
@@ -88,6 +90,12 @@ func _physics_process(delta):#called 60 times per sec
 		elif(collision.collider.name == "End" && score == 4):
 			print("Congratulations!!")
 			user_message.set_text("CONGRATULATIONS")
+		elif(collision.collider.is_in_group("ammo_gun")):
+			gun_ammo += 5
+			collision.collider.queue_free()
+		if(gun_ammo >= 10):
+			gun_ammo = 10	
+			print("Ammo " + str(gun_ammo))
 		
 
 	
