@@ -1,5 +1,6 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
+[ext_resource path="res://audio/gunshot.wav" type="AudioStream" id=1]
 [ext_resource path="res://BebasNeue-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://training_camp/crossHair.png" type="Texture" id=4]
@@ -35,12 +36,19 @@ albedo_color = Color( 1, 0, 0, 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 2.2, 0 )
 
 [node name="Message" type="Label" parent="Player"]
-margin_right = 500.0
-margin_bottom = 100.0
+margin_left = 25.0
+margin_top = 462.0
+margin_right = 1006.0
+margin_bottom = 582.0
 custom_fonts/font = SubResource( 9 )
 text = " Test"
 align = 1
 valign = 1
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="Player"]
+
+[node name="sound_fx" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource( 1 )
 
 [node name="Ground" type="StaticBody" parent="."]
 transform = Transform( 100, 0, 0, 0, 1, 0, 0, 0, 100, 0, 0, 0 )

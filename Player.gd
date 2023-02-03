@@ -26,6 +26,8 @@ var inventory:WeaponInventory
 var reload_timer:Timer
 var can_shoot = true
 
+onready var sound_fx:AudioStreamPlayer = get_node("sound_fx")
+
 func _ready():
 	ray = RayCast.new()
 	ray.enabled = true
@@ -58,13 +60,20 @@ func _physics_process(delta):#called 60 times per sec
 	if Input.is_action_pressed("move_right"):
 		input.x-=1
 	if (Input.is_action_just_pressed("fire") && gun_ammo > 0):
-		if ray.is_colliding():
-			gun_ammo -= 1
-			var obj = ray.get_collider()
-			print("the object " + obj.get_name() + " is in front of the player00")
-			print("you have " + str(gun_ammo) + " ammo left")	
-			if (obj.is_in_group("target")):
-				obj.got_hit()	
+		var condition1 = (inventory.weapon_index == Weapon.TYPE_GUN)
+		var condition2 = (inventory.weapon_index == Weapon.TYPE_AUTO_GUN)
+		var condition3 = inventory.has_ammo_for_current()
+		var condition4 = can_shoot
+		if((condition1 || condition2) && condition3 && condition4):
+			inventory.decrease_curr_ammo()
+			can_shoot = false
+			reload_timer.wait_time = inventory.get_curr_reload_time()
+			reload_timer.start()
+			sound_fx.play()
+			if ray.is_colliding():
+				var obj = ray.get_collider()
+				if (obj.is_in_group("target")):
+					obj.got_hit()
 	input.normalized();
 	
 	var forward = global_transform.basis.z;
@@ -109,6 +118,7 @@ func _physics_process(delta):#called 60 times per sec
 		var message = inventory.get_curr_weapon_name()
 		message += "(" + str(inventory.get_curr_weapon_ammos()) +")"
 		print(message)
+		user_message.set_text(message)
 		reload_timer.wait_time = inventory.get_curr_reload_time()		
 
 	
@@ -127,3 +137,7 @@ func _input(event):
 		mouseDelta = event.relative
 func clear_text():
 	user_message.set_text("")
+
+func reload_timer_timeout():
+	can_shoot = true
+	reload_timer.stop()
