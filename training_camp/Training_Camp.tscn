@@ -59,13 +59,22 @@ shape = SubResource( 1 )
 [node name="CSGBox" type="CSGBox" parent="Ground/CollisionShape"]
 material = SubResource( 2 )
 
-[node name="Ammo" type="StaticBody" parent="." groups=["ammo_gun"]]
+[node name="Ammo_gun" type="StaticBody" parent="." groups=["ammo_gun"]]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2, 4 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Ammo"]
+[node name="CollisionShape" type="CollisionShape" parent="Ammo_gun"]
 shape = SubResource( 1 )
 
-[node name="CSGBox" type="CSGBox" parent="Ammo/CollisionShape"]
+[node name="CSGBox" type="CSGBox" parent="Ammo_gun/CollisionShape"]
+material = SubResource( 13 )
+
+[node name="Ammo_auto_gun" type="StaticBody" parent="." groups=["ammo_auto_gun"]]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2, 16.755 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Ammo_auto_gun"]
+shape = SubResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="Ammo_auto_gun/CollisionShape"]
 material = SubResource( 13 )
 
 [node name="target1" type="StaticBody" parent="." groups=["target"]]
